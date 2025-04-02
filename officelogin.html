@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💧</text></svg>">
+    <title>Office Dashboard - Aqua Insights</title>
+    <link rel="stylesheet" href="styles.css">
+    <script>
+        function navigateTo(page) {
+            window.location.href = page;
+        }
+
+        document.addEventListener("DOMContentLoaded", function() {
+            const buttons = document.querySelectorAll(".nav-bar button, .cta-button");
+            buttons.forEach(button => {
+                button.addEventListener("click", function() {
+                    const page = this.getAttribute("data-page");
+                    if (page) navigateTo(page);
+                });
+            });
+        });
+    </script>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #0077b6, #00aaff);
+            text-align: center;
+            color: white;
+        }
+
+        .header {
+            font-size: 32px;
+            font-weight: bold;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+        }
+
+        .nav-bar ul {
+            list-style: none;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .nav-bar button {
+            background: linear-gradient(135deg, #0077b6, #00aaff);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .nav-bar button:hover {
+            background: linear-gradient(135deg, #005f99, #0088cc);
+            transform: translateY(-2px);
+        }
+
+        .hero-section {
+            margin: 30px auto;
+            padding: 40px;
+            background: white;
+            color: black;
+            border-radius: 10px;
+            width: 80%;
+        }
+
+        .cta-button {
+            padding: 14px 28px;
+            font-size: 18px;
+            font-weight: bold;
+            background: linear-gradient(135deg, #28a745, #218838);
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .cta-button:hover {
+            transform: scale(1.05);
+        }
+
+        .leakage-section {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 30px auto;
+            width: 85%;
+        }
+
+        .leakage-gallery {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .leak-item {
+            background: white;
+            color:black;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .leak-item img {
+            width: 150px;
+            height: 150px;
+            border-radius: 8px;
+        }
+
+        footer {
+            padding: 20px;
+            background: #005f8f;
+            color: white;
+            font-weight: bold;
+            margin-top: 30px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">AQUA INSIGHTS - Office Dashboard</div>
+    
+    <nav class="nav-bar">
+        <ul>
+            <li><button data-page="schedules.html">Schedules</button></li>
+            <li><button data-page="complaints.html">Complaints</button></li>
+            <li><button data-page="userinfo.html">User Info</button></li>
+            <li><button data-page="services.html">Services</button></li>
+        </ul>
+    </nav>
+    
+    <div class="hero-section">
+        <h2>Welcome to the Office Dashboard</h2>
+        <p>Manage schedules, track complaints, and optimize water services with AI insights.</p>
+
+    </div>
+    
+    <div class="leakage-section">
+        <h3>Recent Leakage Reports</h3>
+        <div class="leakage-gallery">
+            <div class="leak-item">
+                <img src="leak1.jpg" alt="Leakage Image 1">
+                <p>Location: Downtown Street 5</p>
+            </div>
+            <div class="leak-item">
+                <img src="leak2.jpg" alt="Leakage Image 2">
+                <p>Location: Greenview Apartments</p>
+            </div>
+            <div class="leak-item">
+                <img src="leak3.jpg" alt="Leakage Image 3">
+                <p>Location: City Square Park</p>
+            </div>
+        </div>
+    </div>
+    
+    <footer>
+        &copy; 2025 Aqua Insights. All rights reserved.
+    </footer>
+</body>
+</html>

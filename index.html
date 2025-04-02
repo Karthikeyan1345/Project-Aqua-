@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E💧%3C/text%3E%3C/svg%3E">
+
+    <title>AQUA INSIGHTS - Login</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <div class="container">
+        <h1 class="header">AQUA INSIGHTS</h1>
+        
+        <div class="login-box">
+            <div class="toggle-buttons">
+                <button class="toggle-btn active" onclick="showCustomerLogin()">Customer Login</button>
+                <button class="toggle-btn" onclick="showOfficeLogin()">Office Login</button>
+            </div>
+
+            <!-- Customer Login -->
+            <div id="customer-login" class="login-form">
+                <input type="text" id="mobile" placeholder="Enter Mobile Number">
+                <button class="login-btn" onclick="sendOTP()">Send OTP</button>
+
+                <div id="otp-section" class="otp-container">
+                    <div class="otp-inputs">
+                        <input type="text" maxlength="1" class="otp-field">
+                        <input type="text" maxlength="1" class="otp-field">
+                        <input type="text" maxlength="1" class="otp-field">
+                        <input type="text" maxlength="1" class="otp-field">
+                    </div>
+                    <button class="login-btn" onclick="verifyOTP()">Login</button>
+                    <p id="resend-otp" class="resend-link" onclick="sendOTP()">Resend OTP in <span id="timer">120</span>s</p>
+                </div>
+            </div>
+
+            <!-- Office Login -->
+            <div id="office-login" class="login-form hidden">
+                <input type="text" id="office-email" placeholder="Enter Email ID">
+                <input type="password" id="password" placeholder="Enter Password">
+                <button class="login-btn" onclick="officeLogin()">Login</button>
+                <p class="forgot-password" onclick="forgotPassword()">Forgot Password?</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💧</text></svg>">
+
+    <title>Dashboard - Aqua Insights</title>
+    <link rel="stylesheet" href="styles.css">
+    <script>
+        function navigateTo(page) {
+            window.location.href = page;
+        }
+        
+        document.addEventListener("DOMContentLoaded", function() {
+            const buttons = document.querySelectorAll(".nav-bar button, .cta-button");
+            buttons.forEach(button => {
+                button.addEventListener("click", function() {
+                    const page = this.getAttribute("data-page");
+                    if (page) navigateTo(page);
+                });
+            });
+        });
+    </script>
+</head>
+<body>
+    <div class="header">AQUA INSIGHTS - Dashboard</div>
+    
+    <nav class="nav-bar">
+        <ul>
+            <li><button data-page="userprofiles.html">User Profile</button></li>
+            <li><button data-page="schedules.html">Schedules</button></li>
+            <li><button data-page="complaints.html">Complaints</button></li>
+            <li><button data-page="alerts.html">Alerts</button></li>
+            <li><button data-page="feedback.html">Feedback</button></li>
+            <li><button data-page="logout.html">Logout</button></li>
+        </ul>
+    </nav>
+    
+    <div class="hero-section">
+        <h2>Welcome to Aqua Insights</h2>
+        <p>Empowering citizens with real-time water supply tracking, AI-driven insights, and smart issue reporting.</p>
+        <button class="cta-button" onclick="navigateTo('complaints.html?type=leakage')">Report a Leak</button>
+
+    </div>
+    
+    <div class="ai-enhanced-analytics">
+        <h3>AI-Powered Water Insights</h3>
+        <p>Using machine learning, our system predicts water demand, detects anomalies, and suggests conservation strategies.</p>
+        <ul>
+            <li>Real-time leak detection and alert system.</li>
+            <li>Automated demand forecasting for efficient water distribution.</li>
+            <li>AI-based risk assessment for water wastage prevention.</li>
+        </ul>
+    </div>
+    
+    <div class="project-info">
+        <h3>About Aqua Insights</h3>
+        <p>Aqua Insights is a next-generation water management platform leveraging AI, IoT, and data analytics to optimize urban water distribution and provide actionable insights to users and city administrators.</p>
+        <h3>Key Features</h3>
+        <ul>
+            <li>AI-driven monitoring of water supply and consumption.</li>
+            <li>Real-time notifications for leakages and maintenance needs.</li>
+            <li>Smart scheduling system to manage water distribution efficiently.</li>
+            <li>User-driven feedback system for improved water services.</li>
+        </ul>
+        <h3>How It Works</h3>
+        <p>Aqua Insights integrates IoT sensors and AI to monitor real-time water data, predict demand, and alert users about critical water supply conditions.</p>
+    </div>
+    
+    <footer>
+        &copy; 2025 Aqua Insights. All rights reserved.
+    </footer>
+</body>
+</html>

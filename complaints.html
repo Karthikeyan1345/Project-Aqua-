@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💧</text></svg>">
+
+    <title>Complaints - Aqua Insights</title>
+    <link rel="stylesheet" href="styles.css">
+    <script defer src="script.js"></script>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+            text-align: center;
+        }
+        .header {
+            background: linear-gradient(135deg, #0077b6, #005f8f);
+            color: white;
+            padding: 20px;
+            font-size: 24px;
+            font-weight: bold;
+        }
+        .complaints-container {
+            width: 60%;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+        select, input, textarea, button {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            font-size: 16px;
+        }
+        button {
+            background: linear-gradient(135deg, #0077b6, #005f8f);
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        button:hover {
+            opacity: 0.8;
+        }
+        .camera-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        video, img {
+            width: 100%;
+            border-radius: 10px;
+            margin-bottom: 10px;
+        }
+        footer {
+            margin-top: 20px;
+            padding: 20px;
+            background: #005f8f;
+            color: white;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">AQUA INSIGHTS - Complaints</div>
+    
+    <div class="complaints-container">
+        <h2>Select Complaint Type</h2>
+        <select id="complaint-type" onchange="showComplaintForm()" class="centered-select">
+            <option value="">-- Select --</option>
+            <option value="leakage">Water Leakage</option>
+            <option value="quality">Water Quality</option>
+            <option value="officer">Water Board Officers</option>
+            <option value="timing">Timing Complaints</option>
+            <option value="others">Others</option>
+        </select>
+        
+        <div id="complaint-form" class="enhanced-form"></div>
+    </div>
+
+    <script>
+        let capturedLocation = {};
+        let imageData = "";
+        let videoStream = null;
+        
+        function showComplaintForm() {
+            const complaintType = document.getElementById("complaint-type").value;
+            let formHtml = "";
+    
+            if (complaintType === "leakage" || complaintType === "quality") {
+                formHtml = `
+                    <h3>${complaintType === "leakage" ? "Water Leakage" : "Water Quality"} Complaint</h3>
+                    <div class="camera-container">
+                        <video id="video" autoplay></video>
+                        <button onclick="captureImage()">📸 Capture Image</button>
+                        <canvas id="canvas" style="display:none;"></canvas>
+                        <img id="captured-photo" style="display:none;" />
+                    </div>
+                    <button onclick="getLocation()">📍 Detect Location</button>
+                    <p id="location">Location: Not Captured</p>
+                    ${complaintType === "quality" ? '<textarea id="impact" placeholder="Describe the impact of poor water quality"></textarea>' : ''}
+                `;
+                startCamera();
+            } else if (complaintType === "officer") {
+                formHtml = `
+                    <h3>Complaint Against Officer</h3>
+                    <input type="text" id="officer-name" placeholder="Officer Name">
+                    <textarea id="officer-complaint" placeholder="Describe the issue"></textarea>
+                `;
+            } else if (complaintType === "timing") {
+                formHtml = `
+                    <h3>Timing Complaint</h3>
+                    <input type="date" id="delay-date">
+                    <input type="number" id="delay-hours" placeholder="How many hours delayed?">
+                `;
+            } else if (complaintType === "others") {
+                formHtml = `
+                    <h3>Other Complaints</h3>
+                    <textarea id="other-complaint" placeholder="Describe your complaint"></textarea>
+                `;
+            }
+    
+            if (complaintType) {
+                formHtml += '<button onclick="submitComplaint()">✅ Submit Complaint</button>';
+            }
+    
+            document.getElementById("complaint-form").innerHTML = formHtml;
+        }
+    
+        function startCamera() {
+            navigator.mediaDevices.getUserMedia({ video: true })
+                .then(stream => {
+                    videoStream = stream;
+                    document.getElementById("video").srcObject = stream;
+                })
+                .catch(err => alert("Camera access denied."));
+        }
+    
+        function captureImage() {
+            const video = document.getElementById("video");
+            const canvas = document.getElementById("canvas");
+            const context = canvas.getContext("2d");
+            const photo = document.getElementById("captured-photo");
+    
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            context.drawImage(video, 0, 0, canvas.width, canvas.height);
+            imageData = canvas.toDataURL("image/png");
+    
+            photo.src = imageData;
+            photo.style.display = "block";
+            alert("Image captured!");
+        }
+    
+        function getLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(position => {
+                    let lat = position.coords.latitude;
+                    let lon = position.coords.longitude;
+    
+                    fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            let address = data.display_name;
+                            capturedLocation = {
+                                latitude: lat,
+                                longitude: lon,
+                                address: address,
+                                timestamp: new Date().toISOString()
+                            };
+                            document.getElementById("location").textContent = `📍 Location: ${address}`;
+                        })
+                        .catch(() => alert("Unable to fetch address."));
+                }, () => {
+                    alert("Location access denied.");
+                });
+            } else {
+                alert("Geolocation is not supported by this browser.");
+            }
+        }
+        function submitComplaint(event) {
+    if (event) event.preventDefault(); // Prevents page reload
+
+    const complaintType = document.getElementById("complaint-type").value;
+    let complaintData = { type: complaintType, timestamp: new Date().toISOString() };
+
+    if (complaintType === "leakage" || complaintType === "quality") {
+        complaintData.image = imageData;
+        complaintData.location = capturedLocation;
+        if (complaintType === "quality") {
+            complaintData.impact = document.getElementById("impact").value;
+        }
+    } else if (complaintType === "officer") {
+        complaintData.officer = document.getElementById("officer-name").value;
+        complaintData.details = document.getElementById("officer-complaint").value;
+    } else if (complaintType === "timing") {
+        complaintData.date = document.getElementById("delay-date").value;
+        complaintData.hours = document.getElementById("delay-hours").value;
+    } else if (complaintType === "others") {
+        complaintData.details = document.getElementById("other-complaint").value;
+    }
+
+    console.log("Complaint Submitted:", complaintData);
+    alert("Complaint submitted successfully!");
+
+    // Optional: Reset the form after submission
+    document.getElementById("complaint-form").innerHTML = "";
+    document.getElementById("complaint-type").value = "";
+}
+document.addEventListener("DOMContentLoaded", function() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const complaintType = urlParams.get("type");
+
+    if (complaintType) {
+        document.getElementById("complaint-type").value = complaintType;
+        showComplaintForm(); // Auto-load the form for Water Leakage
+    }
+});
+
+    </script>
+    
+
+    <footer>
+        &copy; 2025 Aqua Insights. All rights reserved.
+    </footer>
+</body>
+</html>

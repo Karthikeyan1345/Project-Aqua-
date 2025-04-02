@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💧</text></svg>">
+
+    <title>Water Supply Schedules - Aqua Insights</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <script defer src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #0077b6, #00aaff);
+            color: #f7f3f3;
+            text-align: center;
+        }
+        .map-container {
+            width: 90%;
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        #map {
+            width: 100%;
+            height: 400px;
+            border-radius: 10px;
+            margin-top: 15px;
+        }
+        input, select {
+            width: 80%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+    </style>
+
+    <script>
+        let map;
+        const wardData = {
+            "dharapuram": {
+                "ward 15": { lat: 10.7306, lng: 77.5174, district: "Tiruppur", supply_date: "March 29, 2025", start_time: "6:00 AM", end_time: "7:30 AM", additional_info: "No supply issues reported." }
+            },
+            "pullambadi": {
+                "ward 22": { lat: 10.9333, lng: 78.8833, district: "Pullambadi", supply_date: "March 29, 2025", start_time: "5:00 AM", end_time: "6:30 AM", additional_info: "Pipeline maintenance ongoing." }
+            },
+            "namakkal": {
+                "ward 30": { lat: 11.2194, lng: 78.1675, district: "Namakkal", supply_date: "March 29, 2025", start_time: "4:30 AM", end_time: "6:00 AM", additional_info: "Low pressure due to repairs." }
+            }
+        };
+
+        function initMap() {
+            map = L.map('map').setView([10.7306, 77.5174], 14);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; OpenStreetMap contributors'
+            }).addTo(map);
+        }
+
+        function updateWardOptions() {
+            const cityInput = document.getElementById("city-input").value.toLowerCase();
+            const wardSelect = document.getElementById("ward-input");
+            wardSelect.innerHTML = `<option value="">Select Ward</option>`;
+
+            if (wardData[cityInput]) {
+                for (const ward in wardData[cityInput]) {
+                    const option = document.createElement("option");
+                    option.value = ward;
+                    option.textContent = ward;
+                    wardSelect.appendChild(option);
+                }
+                wardSelect.disabled = false;
+            } else {
+                wardSelect.disabled = true;
+            }
+        }
+
+        function fetchWardDetails() {
+          const cityInput = document.getElementById("city-input").value.toLowerCase();
+          const wardInput = document.getElementById("ward-input").value.toLowerCase();
+
+         if (!cityInput || !wardInput) {
+            alert("Please enter both city and ward.");
+           return;
+         }
+    
+          if (wardData[cityInput] && wardData[cityInput][wardInput]) {
+             updateMapAndDetails(wardData[cityInput][wardInput], wardInput);
+          } else {
+             alert("Invalid city or ward. Please try again.");
+          }
+       }
+
+
+        function updateMapAndDetails(location, ward) {
+             map.setView([location.lat, location.lng], 14);
+             L.marker([location.lat, location.lng]).addTo(map)
+              .bindPopup(`${location.district}, ${ward}`).openPopup();
+
+             document.getElementById("city-name").textContent = location.district;
+             document.getElementById("ward-number").textContent = ward;  // Correctly display ward number
+             document.getElementById("supply-date").textContent = location.supply_date;
+             document.getElementById("start-time").textContent = location.start_time;
+             document.getElementById("end-time").textContent = location.end_time;
+              document.getElementById("additional-info").textContent = location.additional_info;
+        }
+
+    </script>
+</head>
+<body onload="initMap()">
+    <div class="map-container">
+        <h2 style="color: blue;">Enter City and Ward Name</h2>
+        <input id="city-input" type="text" placeholder="Enter city name..." oninput="updateWardOptions()">
+        <select id="ward-input" disabled>
+            <option value="">Select Ward</option>
+        </select>
+        <button onclick="fetchWardDetails()">Search</button>
+        <div id="map"></div>
+    </div>
+
+    <div class="schedule-info">
+        <h3>City & Ward Details & Water Supply Schedule</h3>
+        <p><strong>City:</strong> <span id="city-name">Not Selected</span></p>
+        <p><strong>Ward Number:</strong> <span id="ward-number">Not Selected</span></p>
+        <p><strong>Supply Date:</strong> <span id="supply-date">-</span></p>
+        <p><strong>Start Time:</strong> <span id="start-time">-</span></p>
+        <p><strong>End Time:</strong> <span id="end-time">-</span></p>
+        <p><strong>Additional Info:</strong> <span id="additional-info">No Updates</span></p>
+    </div>
+
+    <footer>
+        &copy; 2025 Aqua Insights. All rights reserved.
+    </footer>
+</body>
+</html>
